@@ -460,10 +460,7 @@ int kvz_threadqueue_flush(threadqueue_queue_t * const threadqueue) {
     if (notdone > 0) {
       int ret;
       PTHREAD_COND_BROADCAST(&(threadqueue->cond));
-      
-      struct timespec wait_moment;
-      ms_from_now_timespec(&wait_moment, 100);
-      ret = pthread_cond_timedwait(&threadqueue->cb_cond, &threadqueue->lock, &wait_moment);
+      ret = pthread_cond_wait(&threadqueue->cb_cond, &threadqueue->lock);
       if (ret != 0 && ret != ETIMEDOUT) {
         fprintf(stderr, "pthread_cond_timedwait failed!\n"); 
         assert(0); 
@@ -498,9 +495,7 @@ int kvz_threadqueue_waitfor(threadqueue_queue_t * const threadqueue, threadqueue
     if (!job_done) {
       int ret;
       PTHREAD_COND_BROADCAST(&(threadqueue->cond));
-      struct timespec wait_moment;
-      ms_from_now_timespec(&wait_moment, 100);
-      ret = pthread_cond_timedwait(&threadqueue->cb_cond, &threadqueue->lock, &wait_moment);
+      ret = pthread_cond_wait(&threadqueue->cb_cond, &threadqueue->lock);
       if (ret != 0 && ret != ETIMEDOUT) {
         fprintf(stderr, "pthread_cond_timedwait failed!\n"); 
         assert(0); 
