@@ -130,7 +130,7 @@ matrix:
     - env: TEST_DIM=16x256 VALGRIND_TEST="--threads=2 --owf=1 --preset=veryslow"
 
 install:
-  - source .travis-install.sh
+  - ./travis-install.sh
 
 script:
-  - source .travis-script.sh
+  - ./travis-script.sh
