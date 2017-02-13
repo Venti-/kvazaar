@@ -57,3 +57,6 @@ install:
 
 script:
   - source .travis-script.sh
+  
+after_script:
+  - set +e # Disable errors to work around Travis not knowing how to fix their stuff.
