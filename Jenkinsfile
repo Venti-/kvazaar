@@ -8,15 +8,15 @@ pipeline {
         sh 'make -j4'
       }
     }
-    input 'Proceed to test?'
     stage('Test') {
       steps {
+        input 'Proceed to test?'
         sh 'make check'
       }
     }
-    input 'Proceed to package?'
     stage('Package') {
       steps {
+        input 'Proceed to package?'
         archiveArtifacts(artifacts: 'src/kvazaar', onlyIfSuccessful: true)
       }
     }
