@@ -1,18 +1,23 @@
 pipeline {
   agent any
   stages {
-    stage('build') {
+    stage('Build') {
       steps {
-        dir(path: 'src') {
-          sh 'make -j4'
-        }
-        
-        sh 'make -j2'
+        sh '''./autogen.sh
+
+'''
+        sh './configure'
+        sh 'make -j4'
       }
     }
-    stage('test') {
+    stage('Test') {
       steps {
         sh 'make test'
+      }
+    }
+    stage('Package') {
+      steps {
+        sh '7za '
       }
     }
   }
