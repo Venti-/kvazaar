@@ -6,18 +6,18 @@ pipeline {
         sh '''./autogen.sh
 
 '''
-        sh './configure'
+        sh './configure --disable-dynamic --enable-static'
         sh 'make -j4'
       }
     }
     stage('Test') {
       steps {
-        sh 'make test'
+        sh 'make check'
       }
     }
     stage('Package') {
       steps {
-        sh '7za '
+        archiveArtifacts(artifacts: 'src/kvazaar', onlyIfSuccessful: true)
       }
     }
   }
