@@ -29,6 +29,7 @@
 #include "global.h" // IWYU pragma: keep
 
 #include <pthread.h>
+#include <stdio.h>
 
 #if defined(__GNUC__) && !defined(__MINGW32__) 
 #include <unistd.h> // IWYU pragma: export
@@ -131,5 +132,25 @@ static INLINE void kvz_sem_destroy(kvz_sem_t *sem)
 }
 
 #endif
+
+static INLINE int kvz_mutex_lock(pthread_mutex_t *mutex)
+{
+  int ret = pthread_mutex_lock(mutex);
+  if (ret) {
+    fprintf(stderr, "pthread_mutex_lock failed!\n");
+    assert(0);
+  }
+  return ret;
+}
+
+static INLINE int kvz_mutex_unlock(pthread_mutex_t *mutex)
+{
+  int ret = pthread_mutex_unlock(mutex);
+  if (ret) {
+    fprintf(stderr, "pthread_mutex_unlock failed!\n");
+    assert(0);
+  }
+  return ret;
+}
 
 #endif //THREADS_H_

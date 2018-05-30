@@ -35,6 +35,7 @@
 #include "threadqueue.h"
 #include "transform.h"
 #include "videoframe.h"
+#include "visualization.h"
 #include "strategies/strategies-picture.h"
 #include "strategies/strategies-quant.h"
 
@@ -730,6 +731,9 @@ static double search_cu(encoder_state_t * const state, int x, int y, int depth, 
   }
 
   assert(cur_cu->type != CU_NOTSET);
+#if KVZ_VISUALIZATION
+  kvz_visualization_draw_block_with_delay(state, &work_tree[depth], cur_cu, x, y, depth);
+#endif
 
   return cost;
 }
@@ -888,11 +892,19 @@ void kvz_search_lcu(encoder_state_t * const state, const int x, const int y, con
     work_tree[depth] = work_tree[0];
   }
 
+#if KVZ_VISUALIZATION
+  kvz_visualization_mv_clear_lcu(state, x, y);
+#endif
+
   // Start search from depth 0.
   double cost = search_cu(state, x, y, 0, work_tree);
 
   // Save squared cost for rate control.
   kvz_get_lcu_stats(state, x / LCU_WIDTH, y / LCU_WIDTH)->weight = cost * cost;
+
+#if KVZ_VISUALIZATION
+  kvz_visualization_mv_draw_lcu(state, x, y, &work_tree[0]);
+#endif
 
   // The best decisions through out the LCU got propagated back to depth 0,
   // so copy those back to the frame.

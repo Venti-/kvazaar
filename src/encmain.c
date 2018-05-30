@@ -49,6 +49,10 @@
 #include "threads.h"
 #include "yuv_io.h"
 
+#if KVZ_VISUALIZATION
+#include "visualization.h"
+#endif
+
 /**
  * \brief Open a file for reading.
  *
@@ -423,6 +427,10 @@ int main(int argc, char *argv[])
     goto exit_failure;
   }
 
+#if KVZ_VISUALIZATION
+  kvz_visualization_init(encoder->in.width, encoder->in.height);
+#endif
+
   //Now, do the real stuff
   {
 
@@ -494,6 +502,10 @@ int main(int argc, char *argv[])
       if (in_args.retval == EXIT_FAILURE) {
         goto exit_failure;
       }
+
+#if KVZ_VISUALIZATION
+      kvz_visualization_frame_init(encoder, cur_in_img);
+#endif
 
       kvz_data_chunk* chunks_out = NULL;
       kvz_picture *img_rec = NULL;
@@ -664,6 +676,9 @@ done:
   if (recout) fclose(recout);
 
   CHECKPOINTS_FINALIZE();
+#if KVZ_VISUALIZATION
+  kvz_visualization_free();
+#endif
 
   return retval;
 }
